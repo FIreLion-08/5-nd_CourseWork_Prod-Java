@@ -1,16 +1,16 @@
-import { USER_POSTS_PAGE } from "../routes.js";
-import { renderHeaderComponent } from "./header-component.js";
-import { posts, goToPage } from "../index.js";
+import { USER_POSTS_PAGE } from '../routes'
+import { renderHeaderComponent } from './header-component'
+import { posts, goToPage } from '../index'
 
 export function renderPostsPageComponent({ appEl }) {
-  // @TODO: реализовать рендер постов из api
-  console.log("Актуальный список постов:", posts);
+    // @TODO: реализовать рендер постов из api
+    console.log('Актуальный список постов:', posts)
 
-  /**
-   * @TODO: чтобы отформатировать дату создания поста в виде "19 минут назад"
-   * можно использовать https://date-fns.org/v2.29.3/docs/formatDistanceToNow
-   */
-  const appHtml = `
+    /**
+     * @TODO: чтобы отформатировать дату создания поста в виде "19 минут назад"
+     * можно использовать https://date-fns.org/v2.29.3/docs/formatDistanceToNow
+     */
+    const appHtml = `
               <div class="page-container">
                 <div class="header-container"></div>
                 <ul class="posts">
@@ -43,8 +43,8 @@ export function renderPostsPageComponent({ appEl }) {
                         <img src="https://storage.yandexcloud.net/skypro-webdev-homework-bucket/1680601502867-%25C3%2590%25C2%25A1%25C3%2590%25C2%25BD%25C3%2590%25C2%25B8%25C3%2590%25C2%25BC%25C3%2590%25C2%25BE%25C3%2590%25C2%25BA%2520%25C3%2591%25C2%258D%25C3%2590%25C2%25BA%25C3%2591%25C2%2580%25C3%2590%25C2%25B0%25C3%2590%25C2%25BD%25C3%2590%25C2%25B0%25202023-04-04%2520%25C3%2590%25C2%25B2%252014.04.29.png" class="post-header__user-image">
                         <p class="post-header__user-name">Варварва Н.</p>
                     </div>
-                  
-                    
+
+
                     <div class="post-image-container">
                       <img class="post-image" src="https://storage.yandexcloud.net/skypro-webdev-homework-bucket/1680670675451-%25C3%2590%25C2%25A1%25C3%2590%25C2%25BD%25C3%2590%25C2%25B8%25C3%2590%25C2%25BC%25C3%2590%25C2%25BE%25C3%2590%25C2%25BA%2520%25C3%2591%25C2%258D%25C3%2590%25C2%25BA%25C3%2591%25C2%2580%25C3%2590%25C2%25B0%25C3%2590%25C2%25BD%25C3%2590%25C2%25B0%25202023-03-31%2520%25C3%2590%25C2%25B2%252012.51.20.png">
                     </div>
@@ -69,8 +69,8 @@ export function renderPostsPageComponent({ appEl }) {
                         <img src="https://storage.yandexcloud.net/skypro-webdev-homework-bucket/1680601502867-%25C3%2590%25C2%25A1%25C3%2590%25C2%25BD%25C3%2590%25C2%25B8%25C3%2590%25C2%25BC%25C3%2590%25C2%25BE%25C3%2590%25C2%25BA%2520%25C3%2591%25C2%258D%25C3%2590%25C2%25BA%25C3%2591%25C2%2580%25C3%2590%25C2%25B0%25C3%2590%25C2%25BD%25C3%2590%25C2%25B0%25202023-04-04%2520%25C3%2590%25C2%25B2%252014.04.29.png" class="post-header__user-image">
                         <p class="post-header__user-name">Варварва Н.</p>
                     </div>
-                  
-                    
+
+
                     <div class="post-image-container">
                       <img class="post-image" src="https://leonardo.osnova.io/97a160ca-76b6-5cba-87c6-84ef29136bb3/">
                     </div>
@@ -91,19 +91,19 @@ export function renderPostsPageComponent({ appEl }) {
                     </p>
                   </li>
                 </ul>
-              </div>`;
+              </div>`
 
-  appEl.innerHTML = appHtml;
+    appEl.innerHTML = appHtml
 
-  renderHeaderComponent({
-    element: document.querySelector(".header-container"),
-  });
+    renderHeaderComponent({
+        element: document.querySelector('.header-container'),
+    })
 
-  for (let userEl of document.querySelectorAll(".post-header")) {
-    userEl.addEventListener("click", () => {
-      goToPage(USER_POSTS_PAGE, {
-        userId: userEl.dataset.userId,
-      });
-    });
-  }
+    for (let userEl of document.querySelectorAll('.post-header')) {
+        userEl.addEventListener('click', () => {
+            goToPage(USER_POSTS_PAGE, {
+                userId: userEl.dataset.userId,
+            })
+        })
+    }
 }
