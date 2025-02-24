@@ -1,7 +1,7 @@
-<!-- # 5-nd_CourseWork_Prod-Java
-Курсовая «Продвинутый JavaScript» -->
+# Instapro 5-nd_CourseWork_Prod-Java
+Курсовая «Продвинутый JavaScript»
 
-# Instapro
+<!-- # Instapro -->
 
 MVP социальной сети для обмена фотографиями
 

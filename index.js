@@ -1,28 +1,34 @@
-import { getPosts } from './api'
-import { renderAddPostPageComponent } from './components/add-post-page-component'
-import { renderAuthPageComponent } from './components/auth-page-component'
+import { getPosts, getUserPosts, addPost } from './api.js'
+import { renderAddPostPageComponent } from './components/add-post-page-component.js'
+import { renderAuthPageComponent } from './components/auth-page-component.js'
 import {
     ADD_POSTS_PAGE,
     AUTH_PAGE,
     LOADING_PAGE,
     POSTS_PAGE,
     USER_POSTS_PAGE,
-} from './routes'
-import { renderPostsPageComponent } from './components/posts-page-component'
-import { renderLoadingPageComponent } from './components/loading-page-component'
+} from './routes.js'
+import { renderPostsPageComponent } from './components/posts-page-component.js'
+import { renderUserPostsPageComponent } from './components/user-posts-page-component.js'
+import { renderLoadingPageComponent } from './components/loading-page-component.js'
 import {
     getUserFromLocalStorage,
     removeUserFromLocalStorage,
     saveUserToLocalStorage,
-} from './helpers'
+    sanitizeHtml,
+} from './helpers.js'
 
 export let user = getUserFromLocalStorage()
 export let page = null
 export let posts = []
+export const setPosts = (newPosts) => {
+    posts = newPosts
+}
 
-const getToken = () => {
-    const token = user ? `Bearer ${user.token}` : undefined
-    return token
+export const getToken = () => {
+    // const token = user ? `Bearer ${user.token}` : undefined
+    // return token
+    return user ? `Bearer ${user.token}` : undefined
 }
 
 export const logout = () => {
@@ -45,7 +51,7 @@ export const goToPage = (newPage, data) => {
         ].includes(newPage)
     ) {
         if (newPage === ADD_POSTS_PAGE) {
-            /* Если пользователь не авторизован, то отправляем его на страницу авторизации перед добавлением поста */
+            // Если пользователь не авторизован, то отправляем его на авторизацию перед добавлением поста
             page = user ? ADD_POSTS_PAGE : AUTH_PAGE
             return renderApp()
         }
@@ -58,32 +64,49 @@ export const goToPage = (newPage, data) => {
                 .then((newPosts) => {
                     page = POSTS_PAGE
                     posts = newPosts
+                    // Обновляет страницу
                     renderApp()
                 })
                 .catch((error) => {
                     console.error(error)
-                    goToPage(POSTS_PAGE)
+                    alert('Не удалось загрузить посты. Попробуйте позже.')
+                    // goToPage(POSTS_PAGE)
                 })
         }
 
         if (newPage === USER_POSTS_PAGE) {
-            // @@TODO: реализовать получение постов юзера из API
-            console.log('Открываю страницу пользователя: ', data.userId)
-            page = USER_POSTS_PAGE
-            posts = []
-            return renderApp()
+            // TODO: реализовать получение постов юзера из API
+            // console.log("Открываю страницу пользователя: ", data.userId);
+            // let userId = data.userId;
+            page = LOADING_PAGE
+            renderApp()
+            return getUserPosts({
+                userId: data.userId,
+                token: getToken(),
+            })
+                .then((newPosts) => {
+                    page = USER_POSTS_PAGE
+                    posts = newPosts
+                    return renderApp()
+                })
+                .catch((error) => {
+                    console.error(error)
+                    alert(
+                        'Не удалось загрузить посты пользователя. Попробуйте позже.',
+                    )
+                })
         }
 
         page = newPage
         renderApp()
-
         return
     }
 
-    throw new Error('страницы не существует')
+    throw new Error('Cтраницы не существует')
 }
 
-const renderApp = () => {
+export const renderApp = () => {
+    // event.stopPropagation()
     const appEl = document.getElementById('app')
     if (page === LOADING_PAGE) {
         return renderLoadingPageComponent({
@@ -110,9 +133,20 @@ const renderApp = () => {
         return renderAddPostPageComponent({
             appEl,
             onAddPostClick({ description, imageUrl }) {
-                // @TODO: реализовать добавление поста в API
+                // TODO: реализовать добавление поста в API
+
+                addPost({
+                    token: getToken(),
+                    description: sanitizeHtml(description),
+                    imageUrl,
+                }).then((responseData) => {
+                    console.log(responseData)
+                    goToPage(POSTS_PAGE)
+                }).catch((error) => {
+                    console.error('Ошибка при добавлении поста:', error);
+                    alert('Не удалось добавить пост. Попробуйте позже.');
+                });
                 console.log('Добавляю пост...', { description, imageUrl })
-                goToPage(POSTS_PAGE)
             },
         })
     }
@@ -124,9 +158,11 @@ const renderApp = () => {
     }
 
     if (page === USER_POSTS_PAGE) {
-        // @TODO: реализовать страницу с фотографиями отдельного пользвателя
-        appEl.innerHTML = 'Здесь будет страница фотографий пользователя'
-        return
+        // TODO: реализовать страницу фотографию пользвателя
+        // appEl.innerHTML = "Здесь будет страница фотографий пользователя";
+        return renderUserPostsPageComponent({
+            appEl,
+        })
     }
 }
 

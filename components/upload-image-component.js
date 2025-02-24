@@ -1,3 +1,5 @@
+import { uploadImage } from '../api'
+
 /**
  * Компонент загрузки изображения.
  * Этот компонент позволяет пользователю загружать изображение и отображать его превью.
@@ -22,42 +24,41 @@ export function renderUploadImageComponent({ element, onImageUrlChange }) {
      */
     const render = () => {
         element.innerHTML = `
-      <div class="upload-image">
-        ${
-            imageUrl
-                ? `
-            <div class="file-upload-image-container">
-              <img class="file-upload-image" src="${imageUrl}" alt="Загруженное изображение">
-              <button class="file-upload-remove-button button">Заменить фото</button>
-            </div>
-            `
-                : `
-            <label class="file-upload-label secondary-button">
-              <input
-                type="file"
-                class="file-upload-input"
-                style="display:none"
-              />
-              Выберите фото
-            </label>
+  <div class="upload=image">
+      ${
+          imageUrl
+              ? `
+          <div class="file-upload-image-conrainer">
+            <img class="file-upload-image" src="${imageUrl}">
+            <button class="file-upload-remove-button button">Заменить фото</button>
+          </div>
           `
-        }
-      </div>
-    `
-
+              : `
+            <label class="file-upload-label secondary-button">
+                <input
+                  type="file"
+                  class="file-upload-input"
+                  style="display:none"
+                />
+                Выберите фото
+            </label>`
+      }
+  </div>
+`
         // Обработчик выбора файла
         const fileInputElement = element.querySelector('.file-upload-input')
+
         fileInputElement?.addEventListener('change', () => {
             const file = fileInputElement.files[0]
             if (file) {
-                const labelEl = document.querySelector('.file-upload-label')
-                labelEl.setAttribute('disabled', true)
-                labelEl.textContent = 'Загружаю файл...'
+                const lableEl = document.querySelector('.file-upload-label')
+                lableEl.setAttribute('disabled', true)
+                lableEl.textContent = 'Загружаю файл...'
 
                 // Загружаем изображение с помощью API
                 uploadImage({ file }).then(({ fileUrl }) => {
                     imageUrl = fileUrl // Сохраняем URL загруженного изображения
-                    onImageUrlChange(imageUrl) // Уведомляем о изменении URL изображения
+                    onImageUrlChange(imageUrl) // Сохраняем URL загруженного изображения
                     render() // Перерисовываем компонент с новым состоянием
                 })
             }
