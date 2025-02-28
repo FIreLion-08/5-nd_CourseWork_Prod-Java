@@ -5,10 +5,15 @@
  * @param {HTMLElement} params.element - HTML-элемент, в который будет рендериться заголовок.
  * @returns {HTMLElement} Возвращает элемент заголовка после рендеринга.
  */
+
+import { goToPage, logout, user } from '../index'
+import { ADD_POSTS_PAGE, AUTH_PAGE, POSTS_PAGE } from '../routes'
+
 export function renderHeaderComponent({ element }) {
     /**
      * Рендерит содержимое заголовка.
      */
+
     element.innerHTML = `
   <div class="page-header">
       <h1 class="logo">instapro</h1>
@@ -25,13 +30,15 @@ export function renderHeaderComponent({ element }) {
               : ''
       }
   </div>
-  `
+
+`
 
     /**
      * Обработчик клика по кнопке "Добавить пост"/"Войти".
      * Если пользователь авторизован, перенаправляет на страницу добавления постов.
      * Если пользователь не авторизован, перенаправляет на страницу авторизации.
      */
+
     element
         .querySelector('.add-or-login-button')
         .addEventListener('click', () => {
